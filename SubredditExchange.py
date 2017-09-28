@@ -4,11 +4,19 @@ import requests
 import requests.auth
 import urllib
 
-app_redirect_uri='http://localhost/reddit_callback'
-app_user_agent='subreddit_exchange_testing by /u/karldreher'
+from decouple import config
+
+# This will throw an exception if not found. For testing you can add a default arg with: default='your_default'
+app_client_id = config('APP_CLIENT_ID')
+app_client_secret = config('APP_CLIENT_SECRET')
+
+app_redirect_uri = 'http://localhost/reddit_callback'
+app_user_agent = 'subreddit_exchange_testing by /u/karldreher'
+
 
 def user_agent():
     'subreddit_exchange_testing by /u/karldreher'
+
 
 def base_headers():
     return {"User-Agent": user_agent()}
@@ -16,13 +24,16 @@ def base_headers():
 
 def save_created_state(state):
     pass
+
+
 def is_valid_state(state):
     return True
 
 
 app = Flask(__name__)
-@app.route("/")
 
+
+@app.route("/")
 def make_authorization_url():
     # Generate a random string for the state parameter
     # Save it for use later to prevent xsrf attacks
@@ -42,7 +53,6 @@ def subreddit_exchange_app():
     return render_template('index.html', url=make_authorization_url())
 
 
-
 @app.route("/reddit_callback")
 def reddit_callback():
     error = request.args.get('error', '')
@@ -56,6 +66,7 @@ def reddit_callback():
     access_token = get_token(code)
     return "Your reddit username is: %s" % get_username(access_token)
 
+
 def get_token(code):
     client_auth = requests.auth.HTTPBasicAuth(app_client_id, app_client_secret)
     post_data = {"grant_type": "authorization_code",
@@ -68,8 +79,8 @@ def get_token(code):
                              data=post_data)
     token_json = response.json()
     return token_json["access_token"]
-    
-    
+
+
 def get_username(access_token):
     headers = base_headers()
     headers.update({"Authorization": "bearer " + access_token})
@@ -78,10 +89,5 @@ def get_username(access_token):
     return me_json['name']
 
 
-
-
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=80)
-
-
-    
