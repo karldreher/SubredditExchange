@@ -1,0 +1,6 @@
+# Main config file
+# Insert your reddit app information below
+
+app_client_id: ""
+app_client_secret: ""
+app_redirect_uri: ""

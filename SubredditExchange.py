@@ -3,8 +3,21 @@ from uuid import uuid4
 import requests
 import requests.auth
 import urllib
+import yaml
 
-app_redirect_uri='http://localhost/reddit_callback'
+
+with open("config.yaml", 'r') as config:
+    try:
+        config = yaml.load(config)
+
+        app_client_id = config['app_client_id']
+        app_client_secret = config['app_client_secret']
+        app_redirect_uri = config['app_redirect_uri']
+
+    except yaml.YAMLError as exc:
+        print('Error opening config file: '.config(exc))
+
+
 app_user_agent='subreddit_exchange_testing by /u/karldreher'
 
 def user_agent():
@@ -68,8 +81,8 @@ def get_token(code):
                              data=post_data)
     token_json = response.json()
     return token_json["access_token"]
-    
-    
+
+
 def get_username(access_token):
     headers = base_headers()
     headers.update({"Authorization": "bearer " + access_token})
@@ -84,4 +97,4 @@ if __name__ == "__main__":
     app.run(host='0.0.0.0', port=80)
 
 
-    
+
