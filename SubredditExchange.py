@@ -21,7 +21,7 @@ app_redirect_uri = "http://localhost/reddit_callback"
 app_user_agent='subreddit_exchange_testing by /u/karldreher'
 
 def user_agent():
-    'subreddit_exchange_testing by /u/karldreher'
+    return 'subreddit_exchange_testing by /u/karldreher'
 
 def base_headers():
     return {"User-Agent": user_agent()}
