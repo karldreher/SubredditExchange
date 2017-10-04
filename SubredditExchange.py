@@ -13,12 +13,10 @@ with open("config.yaml", 'r') as config:
         app_client_id = config['app_client_id']
         app_client_secret = config['app_client_secret']
         app_user_agent = config['app_user_agent']
+        app_redirect_uri = config['app_redirect_uri']
         
     except yaml.YAMLError as exc:
         print('Error opening config file: '.config(exc))
-
-
-app_redirect_uri='http://localhost/reddit_callback'
 
 
 def user_agent():
@@ -26,7 +24,6 @@ def user_agent():
 
 def base_headers():
     return {"User-Agent": user_agent()}
-
 
 def save_created_state(state):
     pass
