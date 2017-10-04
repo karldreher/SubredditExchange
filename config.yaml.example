@@ -4,3 +4,4 @@
 app_client_id: ""
 app_client_secret: ""
 app_user_agent: ""
+app_redirect_uri: "http://example.com/reddit_callback"
