@@ -12,13 +12,14 @@ with open("config.yaml", 'r') as config:
 
         app_client_id = config['app_client_id']
         app_client_secret = config['app_client_secret']
-
+        app_user_agent = config['app_user_agent']
+        
     except yaml.YAMLError as exc:
         print('Error opening config file: '.config(exc))
 
 
 app_redirect_uri='http://localhost/reddit_callback'
-app_user_agent='subreddit_exchange_testing by /u/karldreher'
+
 
 def user_agent():
     return app_user_agent
