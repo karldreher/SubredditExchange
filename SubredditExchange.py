@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 from uuid import uuid4
 import requests
 import requests.auth
@@ -44,7 +44,7 @@ def make_authorization_url():
               "state": state,
               "redirect_uri": app_redirect_uri,
               "duration": "temporary",
-              "scope": "identity"}
+              "scope": "identity,mysubreddits"}
     url = "https://www.reddit.com/api/v1/authorize?" + urllib.parse.urlencode(params)
     return url
 
@@ -65,7 +65,7 @@ def reddit_callback():
         abort(403)
     code = request.args.get('code')
     access_token = get_token(code)
-    return "Your reddit username is: %s" % get_username(access_token)
+    return get_userdata(access_token)
 
 def get_token(code):
     client_auth = requests.auth.HTTPBasicAuth(app_client_id, app_client_secret)
@@ -81,12 +81,14 @@ def get_token(code):
     return token_json["access_token"]
 
 
-def get_username(access_token):
+def get_userdata(access_token):
     headers = base_headers()
     headers.update({"Authorization": "bearer " + access_token})
-    response = requests.get("https://oauth.reddit.com/api/v1/me", headers=headers)
-    me_json = response.json()
-    return me_json['name']
+    username_response = requests.get("https://oauth.reddit.com/api/v1/me", headers=headers)
+    me_json = username_response.json()
+    subreddit_response = requests.get("https://oauth.reddit.com/subreddits/mine/subscriber", headers=headers)
+    subreddits = subreddit_response.json()
+    return jsonify(subreddits)
 
 
 
