@@ -44,7 +44,7 @@ def make_authorization_url():
               "state": state,
               "redirect_uri": app_redirect_uri,
               "duration": "temporary",
-              "scope": "identity"}
+              "scope": "identity,mysubreddits"}
     url = "https://www.reddit.com/api/v1/authorize?" + urllib.parse.urlencode(params)
     return url
 
