@@ -1,5 +1,7 @@
-# App config file
+# App config file, python files
 config.yaml
+*.pyc
+
 
 # Windows image file caches
 Thumbs.db
@@ -48,3 +50,4 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+

@@ -1,10 +1,9 @@
-from flask import Flask, request, render_template, jsonify
+from flask import jsonify
 from uuid import uuid4
 import requests
 import requests.auth
 import urllib
 import yaml
-
 
 with open("config.yaml", 'r') as config:
     try:
@@ -19,26 +18,14 @@ with open("config.yaml", 'r') as config:
         print('Error opening config file: '.config(exc))
 
 
-def user_agent():
-    return app_user_agent
-
 def base_headers():
-    return {"User-Agent": user_agent()}
+    return {"User-Agent": app_user_agent}
 
-def save_created_state(state):
-    pass
-def is_valid_state(state):
-    return True
-
-
-app = Flask(__name__)
-@app.route("/")
 
 def make_authorization_url():
     # Generate a random string for the state parameter
     # Save it for use later to prevent xsrf attacks
     state = str(uuid4())
-    save_created_state(state)
     params = {"client_id": app_client_id,
               "response_type": "code",
               "state": state,
@@ -48,24 +35,6 @@ def make_authorization_url():
     url = "https://www.reddit.com/api/v1/authorize?" + urllib.parse.urlencode(params)
     return url
 
-
-def subreddit_exchange_app():
-    return render_template('index.html', url=make_authorization_url())
-
-
-
-@app.route("/reddit_callback")
-def reddit_callback():
-    error = request.args.get('error', '')
-    if error:
-        return "Error: " + error
-    state = request.args.get('state', '')
-    if not is_valid_state(state):
-        # Uh-oh, this request wasn't started by us!
-        abort(403)
-    code = request.args.get('code')
-    access_token = get_token(code)
-    return get_userdata(access_token)
 
 def get_token(code):
     client_auth = requests.auth.HTTPBasicAuth(app_client_id, app_client_secret)
@@ -89,12 +58,5 @@ def get_userdata(access_token):
     subreddit_response = requests.get("https://oauth.reddit.com/subreddits/mine/subscriber", headers=headers)
     subreddits = subreddit_response.json()
     return jsonify(subreddits)
-
-
-
-
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=80)
-
 
 
