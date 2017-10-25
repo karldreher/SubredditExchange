@@ -3,11 +3,8 @@ FROM python:3-alpine
 
 WORKDIR /subreddit_exchange/
 
-ADD config.yaml config.yaml
-ADD SubredditExchange.py SubredditExchange.py
-ADD web.py web.py
-ADD requirements.txt requirements.txt
-ADD /templates/index.html templates/index.html
+ADD . .
+
 
 # Install any needed packages
 RUN pip install -r requirements.txt
