@@ -1,5 +1,7 @@
 from flask import Flask, request, render_template
 import SubredditExchange as srx
+import requests
+import json
 
 
 app = Flask(__name__)
@@ -17,7 +19,10 @@ def reddit_callback():
         return "Error: " + error
     code = request.args.get('code')
     access_token = srx.get_token(code)
-    return srx.get_userdata(access_token)
+    response = srx.get_userdata(access_token)
+    return srx.parse(response.json)
+    
+    
 
 
 

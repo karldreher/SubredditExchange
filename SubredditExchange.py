@@ -60,3 +60,11 @@ def get_userdata(access_token):
     return jsonify(subreddits)
 
 
+def parse(jsondata):
+    subreddit_list = set()
+    for item in jsondata['data']['children']:
+        subreddit = {}
+        subreddit['name']=item['data']['display_name_prefixed']
+        subreddit_list.add(subreddit['name'])
+    return subreddit_list
+
