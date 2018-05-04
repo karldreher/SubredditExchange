@@ -1,6 +1,8 @@
 *.md
+*.MD
 *.xml
 .git*
 LICENSE
 Makefile
+
 *.example
