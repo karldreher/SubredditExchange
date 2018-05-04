@@ -3,7 +3,13 @@ FROM python:3-alpine
 
 WORKDIR /subreddit_exchange/
 
-ADD . .
+ADD templates/* templates/
+ADD SubredditExchange.py .
+ADD web.py .
+ADD requirements.txt .
+
+# Build will fail if config.yaml is missing.  This is intentional.
+ADD config.yaml .
 
 
 # Install any needed packages
